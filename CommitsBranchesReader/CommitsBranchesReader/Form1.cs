@@ -30,6 +30,9 @@ namespace CommitsBranchesReader
 
         private void button1_Click(object sender, EventArgs e)
         {
+
+            dataGridView1.Refresh();
+
             try
             {
                 var tmp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
@@ -44,20 +47,11 @@ namespace CommitsBranchesReader
                     foreach (var Commit in Git.Commits)
 
                     {
-                        int n = 0;
 
-                        /*
-                                                dataGridView1.Rows[n].Cells[1].Value = Commit.Author.Name;
-                                                dataGridView1.Rows[n].Cells[2].Value = Commit.Committer.When;
-                                                dataGridView1.Rows[n].Cells[3].Value = Branch.Name;
-                                                dataGridView1.Rows.Add();
-                                                n++;
-                            */
 
                         DataGridViewRow row = (DataGridViewRow)dataGridView1.Rows[0].Clone();
                         row.Cells[1].Value = Commit.Author.Name;
                         row.Cells[2].Value = Commit.Committer.When;
-                        row.Cells[3].Value = Branch.Name;
                         dataGridView1.Rows.Add(row);
 
                     }
