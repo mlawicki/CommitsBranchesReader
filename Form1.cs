@@ -9,60 +9,120 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using LibGit2Sharp;
-using LibGit2Sharp.Handlers;
+using System.Xml.Serialization;
 
 namespace CommitsBranchesReader
 {
     public partial class Form1 : Form
     {
 
-
         public Form1()
         {
             InitializeComponent();
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            textBox1.Text = "http://github.com/mlawicki/CommitsBranchesReader";
         }
-
-
- 
 
         private void button1_Click(object sender, EventArgs e)
         {
-            try
+            dataGridView1.Refresh();
+            string tmp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+           
+           try
             {
-                var tmp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
 
-                string path = Repository.Clone(
-                    textBox1.Text,
-                    tmp);
+                var branches = Repository.ListRemoteReferences(textBox1.Text)
+                         .Where(elem => elem.IsLocalBranch)
+                         .Select(elem => elem.CanonicalName
+                                             .Replace("refs/heads/", ""));
 
-                using (var Git = new Repository(path))
+
+                foreach (string branch in branches)
                 {
-                    foreach (var Commit in Git.Commits)
+                    string localTmp = tmp + branch;
 
-                    {
-                        int n = 0;
+                    string path2 = Repository.Clone(
+                        textBox1.Text,
+                        localTmp, 
+                        new CloneOptions { BranchName = branch });
 
-                        dataGridView1.Rows[n].Cells[1].Value = Commit.Author.Name;
-                        dataGridView1.Rows[n].Cells[2].Value = Commit.Committer.When;
-                        dataGridView1.Rows[n].Cells[3].Value = Branch.Name;
-                        dataGridView1.Rows.Add();
+                        using (var Git = new Repository(path2))
+                        {
 
-                        n++;
-                    }
+                            foreach (var Commit in Git.Commits)
+
+                            {
+
+                                DataGridViewRow row = (DataGridViewRow)dataGridView1.Rows[0].Clone();
+                                row.Cells[0].Value = Commit.Author.Name;
+                                row.Cells[1].Value = Commit.Committer.When;
+                                dataGridView1.Rows.Add(row);
+
+                            }
+                        }
                 }
+
+
             }
-            catch (Exception ex){ MessageBox.Show(ex.Message); }
+            catch (Exception ex){ MessageBox.Show("Błąd: "+ex.Message); }
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        DataTable dt = new DataTable();
+        private DataTable DataTableZdgv(DataGridView dataGridView1)
+        {
+            dt.TableName = "commity";
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+            {
+               dt.Columns.Add(column.Name);
+            }
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                DataRow dRow = dt.NewRow();
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    dRow[cell.ColumnIndex] = cell.Value;
+                }
+                dt.Rows.Add(dRow);
+            }
+            return dt;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "XML-File | *.xml";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+
+                    try
+                        {
+                        DataTableZdgv(dataGridView1);
+                        dt.WriteXml(sfd.FileName, XmlWriteMode.WriteSchema);
+                    }
+                        catch (Exception ex)
+                        { MessageBox.Show("Błąd zapisu pliku XML: " + ex.Message); }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Błąd tworzenia pliku XML: " + ex.Message);
+            }
+        }
     }
-}
+    }
