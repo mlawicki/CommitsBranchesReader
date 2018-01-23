@@ -33,7 +33,7 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.button2 = new System.Windows.Forms.Button();
             this.Autor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Data = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -61,7 +61,6 @@
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Id,
             this.Autor,
             this.Data});
             this.dataGridView1.Location = new System.Drawing.Point(3, 79);
@@ -80,13 +79,15 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Adres repozytorium:";
             // 
-            // Id
+            // button2
             // 
-            this.Id.HeaderText = "Id";
-            this.Id.MinimumWidth = 15;
-            this.Id.Name = "Id";
-            this.Id.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Id.Width = 20;
+            this.button2.Location = new System.Drawing.Point(113, 316);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(122, 33);
+            this.button2.TabIndex = 5;
+            this.button2.Text = "Eksport do XML";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Autor
             // 
@@ -98,15 +99,16 @@
             // Data
             // 
             this.Data.HeaderText = "Data";
-            this.Data.MinimumWidth = 175;
+            this.Data.MinimumWidth = 190;
             this.Data.Name = "Data";
-            this.Data.Width = 175;
+            this.Data.Width = 190;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 361);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.textBox1);
@@ -128,7 +130,7 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Id;
+        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Autor;
         private System.Windows.Forms.DataGridViewTextBoxColumn Data;
     }
